@@ -1,0 +1,25 @@
+body{
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+main{
+    border: 1px solid black;
+    margin: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+button{
+    margin: 5px;
+}
+
+div{
+    text-align: center;
+    padding: 5px;
+    margin: 10px;
+    width: 50vw;
+}
