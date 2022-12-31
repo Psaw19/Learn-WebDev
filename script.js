@@ -14,10 +14,10 @@ checkButton.addEventListener('click' , () => {
     if(checkPalindromeForAllDateFormats(date)){
       message.innerText = ('🎊 Hurrah!! 🎊 Your were born on palindrome date 🎉🎉');
     } else {
-      var diff = getNextPalindromeDate(date);
+      var diff = getPrevOrNextPalindromeDate(date);
       var nextDateStr = diff[1].day + '-'  +diff[1].month + '-' + diff[1].year;
 
-      message.innerText = 'OOPS!! if you were born after '+ diff[0] + ' days on ' + nextDateStr + ' your birth date would have been a palindrome birthday';
+      message.innerText = 'OOPS!! if you were born on ' + nextDateStr + ' your birth date would have been a palindrome birthday';
 
     }
   }
@@ -107,35 +107,62 @@ function getNextDate(date) {
   var daysInMonth = [31 , 28 , 31 , 30 , 31 , 30 , 31 , 31 , 30 , 31 , 30 , 31];
 
   if(month === 2){
-      if(isLeapYear(year) ){
-      daysInMonth[1] = 29;
-    }
+      daysInMonth[1] = isLeapYear(year) ? 29:28;
   }
 
   if(day > daysInMonth[month-1]){
     day = 1;
     month++;
-  }
-
-  if(month > 12){
-    month = 1;
-    year++;
+    if(month > 12){
+      month = 1;
+      year++;
+    }
   }
 
   return {day:day,month:month,year:year,}
 }
 
-function getNextPalindromeDate(date){
+function getPrevOrNextPalindromeDate(date){
   var nextDate = getNextDate(date);
-  var counter = 0;
+  var prevDate = getPrevDate(date);
+  var ctr = 0;
+  var flag = false;
 
   while(true){
-    counter = counter+1;
+    ctr += 1;
     if(checkPalindromeForAllDateFormats(nextDate)){
+      flag = true;
+      break;
+    } else if(checkPalindromeForAllDateFormats(prevDate)){
       break;
     }
     nextDate = getNextDate(nextDate);
+    prevDate = getPrevDate(prevDate);
   }
 
-  return [counter, nextDate];
+  var closestPalindromeDate = flag ? nextDate : prevDate;
+  return [ctr, closestPalindromeDate];
+}
+
+function getPrevDate(date){
+  var day = date.day-1;
+  var month = date.month;
+  var year = date.year;
+
+  var daysInMonth = [31 , 28 , 31 , 30 , 31 , 30 , 31 , 31 , 30 , 31 , 30 , 31];
+
+  if(month === 3){
+    daysInMonth[1] = isLeapYear(year) ? 29:28;
+}
+
+  if(day === 0){
+    month--;
+    if(month === 0){
+      month = 12;
+      year--;
+    }
+    day = daysInMonth[month-1];
+  }
+
+return {day:day,month:month,year:year,}
 }
